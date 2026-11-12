@@ -24,13 +24,19 @@ participantRows = strcmp(T.Participant, participant);
 nerveRows = strcmp(T.Nerve, nerve);
 trialData = T(participantRows & nerveRows, :);
 
-%% Extract trial locations
-total = trialData.LocationRegion;
+%% Remove duplicates and extract locations
+total=[];
+for i = 1:15
+    contactData = trialData(trialData.Contact==i, :);
+    loc4Contact = contactData.LocationRegion;
+    total = [total; unique(loc4Contact)];
+end
 
 %% Find the frequency each region is reported across PNS contacts
 totalLoc = unique(total);
 
 % initialize variable
+maskAppearanceDict = [];
 maskAppearanceDict{1,1} = "test";
 maskAppearanceDict{1,2} = [];
 
@@ -57,7 +63,7 @@ end
 
 %% Make overlap hand figure
 
-if strcmp(nerve, 'Ulnar')
+if strcmp(nerve, 'Median')
     color = [255 133 133]/255; % coral
 else
     color = [124 151 222]/255; % blue
